@@ -128,33 +128,39 @@ async function main() {
     const type= await question('输入狙击方式 1预估购买 2燃烧购买: ')
     const amount=await question('输入购买份额')
     const MaxETH=await question('输入最大愿意承受金额')
-
-    let BuyAddress=""
-     if (web3.utils.isAddress(Address) == true) {
-        BuyAddress=Address
-    } else {
-        console.log(`输入twitter用户正在查询用户`)
-        const address = await seasrChAddress(Address)
-        console.log(`查询成功${address}`)
-        if (web3.utils.isAddress(address) == true) {
-            BuyAddress=address
-        }else{
-            console.log('没有获取到地址 请检查')
-        
-            return
-        }
+    const iftrue=await question('没有开通是否循环检查是否开通 1  继续 否则任意键循环一次')
+    for(;;){
+        let BuyAddress=""
+        if (web3.utils.isAddress(Address) == true) {
+           BuyAddress=Address
+       } else {
+           console.log(`输入twitter用户正在查询用户`)
+           const address = await seasrChAddress(Address)
+           console.log(`查询成功${address}`)
+           if (web3.utils.isAddress(address) == true) {
+               BuyAddress=address
+           }else{
+               console.log('没有获取到地址 请检查')
+              
+                continue
+               
+           }
+       }
+       if(type==1){
+         
+               estBuy(BuyAddress,amount,MaxETH)
+       }
+       if(type==2){
+           const Sleep=await question('输入延迟频率')
+           console.log(`选择碰撞购买 请输入延迟频率`)
+               fastBuy(BuyAddress,amount,MaxETH,Sleep)
+           
+       }
+       if(iftrue!='1'){
+         break;
+       }
     }
-    if(type==1){
-      
-            estBuy(BuyAddress,amount,MaxETH)
-    }
-    if(type==2){
-        const Sleep=await question('输入延迟频率')
-        console.log(`选择碰撞购买 请输入延迟频率`)
-            fastBuy(BuyAddress,amount,MaxETH,Sleep)
-        
-    }
-
+   
 
 }
 
